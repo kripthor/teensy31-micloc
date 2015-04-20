@@ -30,10 +30,10 @@ void setup() {
 #define SAMPLES 2048
 #define BUFFERSIZE 2048
 
-const int channelA2 = ADC_Module::channel2sc1aADC0[2];
-const int channelA3 = ADC_Module::channel2sc1aADC1[3];
-const int channelA11 = ADC_Module::channel2sc1aADC0[11];
-const int channelA10 = ADC_Module::channel2sc1aADC1[10];
+const int channelA2 = ADC::channel2sc1aADC0[2];
+const int channelA3 = ADC::channel2sc1aADC1[3];
+const int channelA11 = ADC::channel2sc1aADC0[11];
+const int channelA10 = ADC::channel2sc1aADC1[10];
 
 byte THRESHOLD = 180;
 byte value1;
