@@ -29,6 +29,7 @@ void setup() {
 
 #define SAMPLES 2048
 #define BUFFERSIZE 2048
+#define NO_EVENT -1
 
 const int channelA2 = ADC::channel2sc1aADC0[2];
 const int channelA3 = ADC::channel2sc1aADC1[3];
@@ -60,7 +61,11 @@ void loop() {
   startTime = micros();
      //START SAMPLING
      //Strange init in this for, but the compiler seems to optimize this code better, so we get faster sampling
-  for(i=0,k=0,samples=SAMPLES,event=0;i<samples;i++) {
+  i = 0;
+  k = 0;
+  samples = SAMPLES;
+  event = NO_EVENT;
+  for(i<samples;i++) {
     //TAKE THE READINGS
     highSpeed8bitAnalogReadMacro(channelA2,channelA3,value1,value2);
     //SHOULD ADJUST THIS 2nd READING
@@ -72,7 +77,7 @@ void loop() {
     buffer4[k] = value4;
     
     //CHECK FOR EVENTS
-    if (value1 > THRESHOLD && !event) {
+    if (value1 > THRESHOLD && event != NO_EVENT) {
       event = k;
       //THERE IS AN EVENT, ARE WE REACHING THE END? IF SO TAKE MORE SAMPLES
       if (i > SAMPLES-1024) samples = SAMPLES+1024;
@@ -84,7 +89,7 @@ void loop() {
   stopTime = micros();
   
   //WAS AN EVENT BEEN DETECTED?
-  if (event != 0) {
+  if (event != NO_EVENT) {
     printInfo();
     printSamples(); 
   }
