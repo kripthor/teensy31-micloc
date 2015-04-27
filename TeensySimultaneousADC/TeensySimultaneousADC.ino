@@ -37,24 +37,24 @@ const int channelA11 = ADC::channel2sc1aADC0[11];
 const int channelA10 = ADC::channel2sc1aADC1[10];
 
 byte THRESHOLD = 180;
-byte value1;
-byte value2;
-byte value3;
-byte value4;
+byte value1 = 0;
+byte value2 = 0;
+byte value3 = 0;
+byte value4 = 0;
 
-byte buffer1[BUFFERSIZE];
-byte buffer2[BUFFERSIZE];
-byte buffer3[BUFFERSIZE];
-byte buffer4[BUFFERSIZE];
+byte buffer1[BUFFERSIZE] = {0};
+byte buffer2[BUFFERSIZE] = {0};
+byte buffer3[BUFFERSIZE] = {0};
+byte buffer4[BUFFERSIZE] = {0};
 
-int samples;
-long startTime;
-long stopTime;
-long totalTime;
-int event;
+int samples = 0;
+long startTime = 0;
+long stopTime = 0;
+long totalTime = 0;
+int event = NO_EVENT;
 
-int i;
-int k;
+int i = 0;
+int k = 0;
 
 
 void loop() {
