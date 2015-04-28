@@ -65,7 +65,7 @@ void loop() {
   k = 0;
   samples = SAMPLES;
   event = NO_EVENT;
-  for(i<samples;i++) {
+  for(;i<samples;i++) {
     //TAKE THE READINGS
     highSpeed8bitAnalogReadMacro(channelA2,channelA3,value1,value2);
     //SHOULD ADJUST THIS 2nd READING
