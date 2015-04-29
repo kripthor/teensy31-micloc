@@ -150,7 +150,9 @@ void serialWrite(byte *buffer,int siz) {
 
 void printInfo() {
   totalTime = stopTime-startTime;
-  double samplesPerSec = i*1000.0/totalTime;
+  // Calc samples frequency in [samples/msec]
+  // i [samples] / t [usec] = i * 1000 / [1000 usec] = i * 1000 [samples] / [msec]
+  double samplesPerMillisec = i*1000.0/totalTime;
   
   //Take a temperature/humidity reading
   //The DHT11 should be connected with a resistor for less errors in readings,
@@ -161,8 +163,8 @@ void printInfo() {
   Serial.print(totalTime);
   Serial.print(" Samples: ");
   Serial.print(i,DEC);
-  Serial.print(" Samples/uSec: ");
-  Serial.print(samplesPerSec,7);
+  Serial.print(" Samples/mSec: ");
+  Serial.print(samplesPerMillisec,7);
   Serial.print(" Temp: ");
   Serial.print((float)DHT11.temperature,2);
   Serial.print(" Hum: ");
