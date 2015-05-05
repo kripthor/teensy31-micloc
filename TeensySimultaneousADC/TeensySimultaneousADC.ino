@@ -77,7 +77,7 @@ void loop() {
     buffer4[k] = value4;
     
     //CHECK FOR EVENTS
-    if (value1 > THRESHOLD && event != NO_EVENT) {
+    if (value1 > THRESHOLD && event == NO_EVENT) {
       event = k;
       //THERE IS AN EVENT, ARE WE REACHING THE END? IF SO TAKE MORE SAMPLES
       if (i > SAMPLES-1024) samples = SAMPLES+1024;
