@@ -29,38 +29,43 @@ void setup() {
 
 #define SAMPLES 2048
 #define BUFFERSIZE 2048
+#define NO_EVENT -1
 
-const int channelA2 = ADC_Module::channel2sc1aADC0[2];
-const int channelA3 = ADC_Module::channel2sc1aADC1[3];
-const int channelA11 = ADC_Module::channel2sc1aADC0[11];
-const int channelA10 = ADC_Module::channel2sc1aADC1[10];
+const int channelA2 = ADC::channel2sc1aADC0[2];
+const int channelA3 = ADC::channel2sc1aADC1[3];
+const int channelA11 = ADC::channel2sc1aADC0[11];
+const int channelA10 = ADC::channel2sc1aADC1[10];
 
 byte THRESHOLD = 180;
-byte value1;
-byte value2;
-byte value3;
-byte value4;
+byte value1 = 0;
+byte value2 = 0;
+byte value3 = 0;
+byte value4 = 0;
 
-byte buffer1[BUFFERSIZE];
-byte buffer2[BUFFERSIZE];
-byte buffer3[BUFFERSIZE];
-byte buffer4[BUFFERSIZE];
+byte buffer1[BUFFERSIZE] = {0};
+byte buffer2[BUFFERSIZE] = {0};
+byte buffer3[BUFFERSIZE] = {0};
+byte buffer4[BUFFERSIZE] = {0};
 
-int samples;
-long startTime;
-long stopTime;
-long totalTime;
-int event;
+int samples = 0;
+long startTime = 0;
+long stopTime = 0;
+long totalTime = 0;
+int event = NO_EVENT;
 
-int i;
-int k;
+int i = 0;
+int k = 0;
 
 
 void loop() {
   startTime = micros();
      //START SAMPLING
      //Strange init in this for, but the compiler seems to optimize this code better, so we get faster sampling
-  for(i=0,k=0,samples=SAMPLES,event=0;i<samples;i++) {
+  i = 0;
+  k = 0;
+  samples = SAMPLES;
+  event = NO_EVENT;
+  for(;i<samples;i++) {
     //TAKE THE READINGS
     highSpeed8bitAnalogReadMacro(channelA2,channelA3,value1,value2);
     //SHOULD ADJUST THIS 2nd READING
@@ -72,7 +77,7 @@ void loop() {
     buffer4[k] = value4;
     
     //CHECK FOR EVENTS
-    if (value1 > THRESHOLD && !event) {
+    if (value1 > THRESHOLD && event == NO_EVENT) {
       event = k;
       //THERE IS AN EVENT, ARE WE REACHING THE END? IF SO TAKE MORE SAMPLES
       if (i > SAMPLES-1024) samples = SAMPLES+1024;
@@ -84,7 +89,7 @@ void loop() {
   stopTime = micros();
   
   //WAS AN EVENT BEEN DETECTED?
-  if (event != 0) {
+  if (event != NO_EVENT) {
     printInfo();
     printSamples(); 
   }
@@ -145,7 +150,9 @@ void serialWrite(byte *buffer,int siz) {
 
 void printInfo() {
   totalTime = stopTime-startTime;
-  double samplesPerSec = i*1000.0/totalTime;
+  // Calc samples frequency in [samples/msec]
+  // i [samples] / t [usec] = i * 1000 / [1000 usec] = i * 1000 [samples] / [msec]
+  double samplesPerMillisec = i*1000.0/totalTime;
   
   //Take a temperature/humidity reading
   //The DHT11 should be connected with a resistor for less errors in readings,
@@ -156,8 +163,8 @@ void printInfo() {
   Serial.print(totalTime);
   Serial.print(" Samples: ");
   Serial.print(i,DEC);
-  Serial.print(" Samples/uSec: ");
-  Serial.print(samplesPerSec,7);
+  Serial.print(" Samples/mSec: ");
+  Serial.print(samplesPerMillisec,7);
   Serial.print(" Temp: ");
   Serial.print((float)DHT11.temperature,2);
   Serial.print(" Hum: ");
